@@ -71,33 +71,41 @@ int get_line (file *now_red, char *line)
 {
 	int i;
 	int length;
+	int length2;
 	char *mo;
 	char *buf;
+	char *line2;
 
 	if(!(mo = (char*)malloc(BUFF_SIZE * sizeof(char))))
-			return (-1);
+		return (-1);
 	buf = now_red->buf;
 	i = 0;
 	if (buf == NULL)
 		return (-1);
-		printf("El contenido de line antes es: %s\n", mo);
+//	printf("El contenido de line antes es: %s\n", line);
+//	printf("El contenido de buf antes es: %s\n", buf);
 	while (*buf != '\n' && *buf != '\0')
 	{
 		mo[i++] = *buf++;
 	}
 	length = strlen(line);
-	length += strlen (mo);
-	ft_strlcat(line, mo, length + 1);
-		//printf("El contenido de line después es: %s\n", line);
-		//printf("El contenido de mo después es: %s\n", mo);
+	length2 = length + strlen(mo);
+	if(!(line2 = (char*)malloc((length2 + 1) * sizeof(char))))
+	       return (-1);	
+	ft_strlcat(line2, line, length2 + 1);
+	ft_strlcat(line2, mo, length2 + 1);
+	free(line);
+
+	line = line2;
+	printf("El contenido de line después es: %s\n", line);
+//	printf("El contenido de mo después es: %s\n", mo);
 	if (*buf == '\0')
 		return (0);
 	else
 	{
 		buf++;
-		*line = '\0';
 		now_red->buf = ft_memmove(&(*buf), &(buf[0]),  BUFF_SIZE);
-			printf("El contenido de buf después del salto es: %s\n", now_red->buf);
+	//	printf("El contenido de buf después del salto es: %s\n", now_red->buf);
 		return (1);
 	}
 }
@@ -112,23 +120,21 @@ int	get_buffer_line(file *now_reading, char **line)
 	while (end_line == 0)
 	{
 		readed = read(now_reading->fd, now_reading->buf, BUFF_SIZE);
-		//		printf("El contenido leido de now_reading->buf es: %s\n", now_reading->buf);
+		//printf("El contenido leido de now_reading->buf es: %s\n", now_reading->buf);
 		if(readed < 0)
 		{
-			write(2, "An error occurred in the read.\n", 31);
+		//	write(2, "An error occurred in the read.\n", 31);
 			return (-1) ;
 		}
 		else if (readed == 0)
 		{
-			(**line) = '\0';
-			write(1, "End of file reached\n", 20);
+			//(**line) = '\0';
+		//	write(1, "End of file reached\n", 20);
 			return (0) ;
 		}
 		else
 			end_line = get_line(now_reading, *line);
 	}
-	if (end_line == 1)
-		**line = '\0';
 	return (1);
 }
 
@@ -141,17 +147,21 @@ struct buff_file	*get_fd(int fd, file *now_reading)
 	{
 		while (now_reading->fd != fd && now_reading->next != NULL)
 			now_reading = now_reading->next;
-		free(new_file);
 		if (now_reading->fd != fd)
 		{
 			new_file->fd = fd;
 			now_reading->next = new_file;
 			now_reading = now_reading->next;
-			//	printf("El valor 1 de now_reading.fd es: %d\n",now_reading->fd);
+		//	printf("El valor 1 de now_reading.fd es: %d\n",now_reading->fd);
 		}
+	//	else
+		//	free(new_file);
 	}
 	else
+	{
+	//	free(new_file);
 		now_reading->fd = fd;
+	}
 	return now_reading;
 }
 
@@ -161,17 +171,16 @@ int get_next_line(int fd, char **line)
 	int			returning;
 	file		*red;
 	file		*now_red;
-	char		*line2;
+//	char		*line2;
 
-	line2 = *line;
-
+	if(!(*line = (char*)malloc(1*sizeof(char))))
+		return (-1);
+//	line2 = *line;
 	if (reading == NULL)
 	{
 		if (!(reading = (file*)malloc(1 * sizeof(file))))
 			return (-1);
-		reading->fd = fd;
-		reading->buf = NULL;
-		reading->next = NULL;
+		//	reading->fd = fd;
 	}
 
 	if (!(red = (file*)malloc(1 * sizeof(file))))
@@ -179,10 +188,10 @@ int get_next_line(int fd, char **line)
 	red = reading;
 	returning = 1;
 	now_red = get_fd(fd, reading);
-	printf("El contenido de buf al principio es: %s\n", now_red->buf);
+	//printf("El contenido de buf al principio es: %s\n", now_red->buf);
 	if (get_line(now_red, *line) != 1)
 		returning = get_buffer_line(now_red, line);
-		printf("El contenido de line al final es: %s\n", line2);
-	printf("El contenido de buf al final es: %s\n", now_red->buf);
+	//printf("El contenido de line al final es: %s\n", line2);
+	//printf("El contenido de buf al final es: %s\n", now_red->buf);
 	return (returning);
 }
