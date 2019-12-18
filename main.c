@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 13:41:49 by lboza-ba          #+#    #+#             */
-/*   Updated: 2019/12/12 15:05:21 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2019/12/18 13:19:59 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ int		main(void)
 	{
 	mark = get_next_line(fd1, &line);
 	printf("| %s\n", line);
-	mark = get_next_line(fd2, &line);
+	/*mark = get_next_line(fd2, &line);
 	printf("| %s\n", line);
-	/*mark = get_next_line(fd1, &line);
+	mark = get_next_line(fd1, &line);
 	printf("| %s\n", line);
 	mark = get_next_line(fd2, &line);
 	printf("| %s\n", line);*/
