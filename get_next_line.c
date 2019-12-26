@@ -107,25 +107,30 @@ int get_line (file *now_red, char **line)
 	i = 0;
 	if (buf == NULL)
 		return (-1);
-//	printf("El contenido de line antes es: %s\n", *line);
-
+	//	printf("El contenido de line antes es: %s\n", *line);
+	//	printf("El contenido de buf es: %s\n", buf);
 	while (*buf != '\n' && *buf != '\0')
 	{
 		mo[i++] = *buf++;
 	}
-//	printf("El contenido de mo es: %s\n", mo);
+	mo[i] = '\0';
+	//	printf("El contenido de mo es: %s\n", mo);
 	*line = ft_strjoin(*line, mo);
-	//printf("El contenido de line después es: %s\n", *line);
+	//	printf("El contenido de line después es: %s\n", *line);
 	free(mo);
+	i = 0;
 	if (*buf == '\0')
 	{
+		while(now_red->buf[i] != '\0')
+			now_red->buf[i++] = '\0';
 		return (0);
 	}
 	else
 	{
+
 		buf++;
 		now_red->buf = ft_memmove(&(*buf), &(buf[0]),  BUFFER_SIZE);
-	//	printf("El contenido de buf después del salto es: %s\n", now_red->buf);
+		//	printf("El contenido de buf después del salto es: %s\n", now_red->buf);
 		return (1);
 	}
 
@@ -135,28 +140,31 @@ int	get_buffer_line(file *now_reading, char **line)
 {
 	int		end_line;
 	int		readed;
+	int		i;
 
+	i = 0;
 	now_reading->buf = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	end_line = 0;
 
 	while (end_line == 0)
 	{
 		readed = read(now_reading->fd, now_reading->buf, BUFFER_SIZE);
-	//	printf("El contenido leido de now_reading->buf es: %s\n", now_reading->buf);
+		now_reading->buf[BUFFER_SIZE] = '\0';
+		//	printf("El contenido leido de now_reading->buf es: %s\n", now_reading->buf);
 		if(readed < 0)
 		{
-		//	write(2, "An error occurred in the read.\n", 31);
+			//	write(2, "An error occurred in the read.\n", 31);
 			return (-1) ;
 		}
 		else if (readed == 0)
 		{
-			now_reading->buf = "";
+			while(now_reading->buf[i] != '\0')
+				now_reading->buf[i++] = '\0';
 			//write(1, "End of file reached\n", 20);
 			return (0) ;
 		}
 		else
 		{
-
 			end_line = get_line(now_reading, line);
 		}
 	}
@@ -182,7 +190,7 @@ struct buff_file	*get_fd(int fd, file *now_reading)
 			now_reading->next = new_file;
 			now_reading = now_reading->next;
 		}
-//	printf("El contenido de now_reading->fd es: %d\n", now_reading->fd);
+		//	printf("El contenido de now_reading->fd es: %d\n", now_reading->fd);
 	}
 	else
 		now_reading->fd = fd;
@@ -194,13 +202,14 @@ int get_next_line(int fd, char **line)
 	static file	*reading;
 	int			returning;
 	file		*now_red;
-	char		*line2;
+	//char		*line2;
 
-
+	if (line == NULL)
+		return(-1);
 	if (!(*line = (char*)malloc(0 * sizeof(char))))
 		return (-1);
 	*line = "";
-	line2 = *line;
+	//	line2 = *line;
 
 	if (reading == NULL)
 	{
@@ -209,7 +218,7 @@ int get_next_line(int fd, char **line)
 		reading->fd = fd;
 		reading->buf = NULL;
 		reading->next = NULL;
-	//	printf("ha creado un nuevo nodo\n");
+		//	printf("ha creado un nuevo nodo\n");
 	}
 	returning = 1;
 	now_red = get_fd(fd, reading);

@@ -30,9 +30,9 @@ int		main(void)
 	{
 	mark = get_next_line(fd1, &line);
 	printf("| %s\n", line);
-	/*mark = get_next_line(fd2, &line);
+	mark = get_next_line(fd2, &line);
 	printf("| %s\n", line);
-	mark = get_next_line(fd1, &line);
+	/*mark = get_next_line(fd1, &line);
 	printf("| %s\n", line);
 	mark = get_next_line(fd2, &line);
 	printf("| %s\n", line);*/

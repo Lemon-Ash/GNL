@@ -11,10 +11,11 @@
 /* ************************************************************************** */
 
 
-//#ifndef	GET_NEXT_LINE_H
+#ifndef	GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-#ifndef	BUFF_SIZE
-# define BUFF_SIZE 20
+#ifndef	BUFFER_SIZE
+# define BUFFER_SIZE 20
+#endif
 # include <stdlib.h>
 # include <unistd.h>
 
