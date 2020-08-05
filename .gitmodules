@@ -1,0 +1,3 @@
+[submodule "42TESTERS-GNL-TEST"]
+	path = 42TESTERS-GNL-TEST
+	url = https://github.com/Mazoise/42TESTERS-GNL.git
