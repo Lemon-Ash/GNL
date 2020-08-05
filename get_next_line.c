@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/01/13 19:46:26 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/05 22:17:58 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ int	get_buffer_line(file *now_reading, char **line)
 			end_line = get_line(now_reading, line);
 			//printf("La direccion de memoria de now_reading->buf despues es: %p\n", now_reading->buf);
 			//if(end_line == 0)
-				//free(now_reading->buf);
+			//free(now_reading->buf);
 		}
 	}
 	return (1);
@@ -175,7 +175,8 @@ int get_next_line(int fd, char **line)
 {
 	static file	*reading;
 	int			returning;
-	file		*now_red;
+	file		*now_red; 
+//	file		*search_red;
 
 	if (line == NULL)
 		return(-1);
@@ -194,5 +195,16 @@ int get_next_line(int fd, char **line)
 	{
 		returning = get_buffer_line(now_red, line);
 	}
+	/*if(returning == 0 || returning == -1)
+	{
+		search_red = reading;
+		while(search_red->next != now_red)
+			search_red = search_red -> next;
+		if(now_red->next != NULL)
+			search_red->next = now_red->next;
+		else
+			search_red->next = NULL;
+		free(now_red);
+	}*/
 	return (returning);
 }

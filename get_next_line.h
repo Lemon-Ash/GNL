@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:50:55 by lboza-ba          #+#    #+#             */
-/*   Updated: 2019/12/12 15:05:28 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/05 21:47:36 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #ifndef	GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 #ifndef	BUFFER_SIZE
-# define BUFFER_SIZE 20
+# define BUFFER_SIZE 42
 #endif
 # include <stdlib.h>
 # include <unistd.h>
