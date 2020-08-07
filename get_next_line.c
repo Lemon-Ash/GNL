@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/07 15:18:35 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/07 22:04:08 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (*s2 != '\0')
 		*new++ = *s2++;
 	*new = '\0';
+	//if(*s1 != '\0')
+	//	free((void*)s1);
 	return (init_new);
 }
 
@@ -114,6 +116,7 @@ int get_line (file *now_red, char **line)
 	i = 0;
 	if (*buf == '\0')
 	{
+		free((void*)now_red->buf);
 		return (0);
 	}
 	else
@@ -131,13 +134,13 @@ int	get_buffer_line(file *now_reading, char **line)
 	int		readed;
 	int		i;
 
-	if (!(now_reading->buf = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char))))
-		return(-1);
 	//printf("La direccion de memoria de now_reading->buf es: %p\n", now_reading->buf);
 	end_line = 0;
 
 	while (end_line == 0)
 	{		
+		if (!(now_reading->buf = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char))))
+			return(-1);
 		i = 0;
 		while(i <= BUFFER_SIZE)
 			now_reading->buf[i++] = '\0';
@@ -151,6 +154,9 @@ int	get_buffer_line(file *now_reading, char **line)
 		}
 		else if (readed == 0)
 		{
+			//now_reading->buf = NULL;
+			//free(now_reading->buf);
+			//free(now_reading);
 			//write(1, "End of file reached\n", 20);
 			return (0) ;
 		}
@@ -159,8 +165,6 @@ int	get_buffer_line(file *now_reading, char **line)
 			//printf("Entra en el get_line\n");
 			end_line = get_line(now_reading, line);
 			//printf("La direccion de memoria de now_reading->buf despues es: %p\n", now_reading->buf);
-			//if(end_line == 0)
-			//free(now_reading->buf);
 		}
 	}
 	return (1);
@@ -199,7 +203,6 @@ int get_next_line(int fd, char **line)
 
 	if (line == NULL)
 		return(-1);
-	*line = "";
 	if (reading == NULL)
 	{
 		if (!(reading = (file*)malloc(1 * sizeof(file))))
@@ -208,22 +211,12 @@ int get_next_line(int fd, char **line)
 		reading->buf = NULL;
 		reading->next = NULL;
 	}
+	*line = "";
 	returning = 1;
 	now_red = get_fd(fd, reading);
 	if (get_line(now_red, line) != 1)
 	{
 		returning = get_buffer_line(now_red, line);
 	}
-	/*if(returning == 0 || returning == -1)
-	  {
-	  search_red = reading;
-	  while(search_red->next != now_red)
-	  search_red = search_red -> next;
-	  if(now_red->next != NULL)
-	  search_red->next = now_red->next;
-	  else
-	  search_red->next = NULL;
-	  free(now_red);
-	  }*/
 	return (returning);
 }
