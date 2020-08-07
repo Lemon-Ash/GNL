@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/07 15:18:35 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/07 14:27:47 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,25 @@
 #include <string.h>
 #include <unistd.h>
 
-/*void	*ft_memmove(void *dst, const void *src, size_t len)
-  {
-  size_t				i;
-  unsigned char		*ptr;
-  const unsigned char	*ptr2;
-
-  ptr = (unsigned char*)dst;
-  ptr2 = (unsigned char*)src;
-  i = 0;
-  if (dst == src)
-  return (dst);
-  if (ptr2 < ptr)
-  while (++i <= len)
-  ptr[len - i] = ptr2[len - i];
-  else
-  while (len-- > 0)
- *(ptr++) = *(ptr2++);
- return (dst);
- }*/
-
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	int	cont;
+	size_t				i;
+	unsigned char		*ptr;
+	const unsigned char	*ptr2;
 
-	cont = 0;
-	if (!dst || !src)
-		return (0);
-	while (src[cont] != '\0')
-		cont++;
-	while (dstsize > 1 && *src != '\0')
-	{
-		*dst = *src;
-		dst++;
-		src++;
-		dstsize--;
-	}
-	if (dstsize != 0)
-		*dst = '\0';
-	return (cont);
-}
+	ptr = (unsigned char*)dst;
+	ptr2 = (unsigned char*)src;
+	i = 0;
+	if (dst == src)
+		return (dst);
+	if (ptr2 < ptr)
+		while (++i <= len)
+			ptr[len - i] = ptr2[len - i];
+	else
+		while (len-- > 0)
+			*(ptr++) = *(ptr2++);
+	return (dst);
+}	
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -80,6 +59,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		*new++ = *s1++;
 	while (*s2 != '\0')
 		*new++ = *s2++;
+//	free((void*)s1);
 	*new = '\0';
 	return (init_new);
 }
@@ -89,9 +69,7 @@ int get_line (file *now_red, char **line)
 	int i;
 	char *mo;
 	char *buf;
-	char *line2;
 
-	line2 = *line;
 	buf = now_red->buf;
 	i = 0;
 	if (buf == NULL)
@@ -106,10 +84,10 @@ int get_line (file *now_red, char **line)
 		mo[i++] = *buf++;
 	}
 	mo[i] = '\0';
+	printf("La direccion de memoria de *line antes de join es: %p\n", line);
 	*line = ft_strjoin(*line, mo);
-	//printf("La direccion de memoria de *line despues de join es: %p\n", *line);
-	if (*line2 != '\0')
-		free(line2);
+printf("La direccion de memoria de *line despues de join es: %p\n", line);
+
 	free(mo);
 	i = 0;
 	if (*buf == '\0')
@@ -119,7 +97,7 @@ int get_line (file *now_red, char **line)
 	else
 	{
 		buf++;
-		ft_strlcpy(&(now_red->buf[0]), &(*buf),  BUFFER_SIZE);
+		now_red->buf = ft_memmove(&(*buf), &(buf[0]),  BUFFER_SIZE);
 		return (1);
 	}
 
@@ -147,20 +125,20 @@ int	get_buffer_line(file *now_reading, char **line)
 		if(readed < 0)
 		{
 			//	write(2, "An error occurred in the read.\n", 31);
+			free(now_reading->buf);
 			return (-1) ;
 		}
 		else if (readed == 0)
 		{
 			//write(1, "End of file reached\n", 20);
+			free(now_reading->buf);
 			return (0) ;
 		}
 		else
 		{
 			//printf("Entra en el get_line\n");
 			end_line = get_line(now_reading, line);
-			//printf("La direccion de memoria de now_reading->buf despues es: %p\n", now_reading->buf);
-			//if(end_line == 0)
-			//free(now_reading->buf);
+			printf("La direccion de memoria de now_reading->buf despues es: %p\n", now_reading->buf);
 		}
 	}
 	return (1);
@@ -195,11 +173,13 @@ int get_next_line(int fd, char **line)
 	static file	*reading;
 	int			returning;
 	file		*now_red; 
-	//	file		*search_red;
+//	file		*search_red;
 
 	if (line == NULL)
 		return(-1);
-	*line = "";
+	if(!(*line = malloc(1 * sizeof(char))))
+			return (-1);
+	**line = '\0';
 	if (reading == NULL)
 	{
 		if (!(reading = (file*)malloc(1 * sizeof(file))))
@@ -211,19 +191,20 @@ int get_next_line(int fd, char **line)
 	returning = 1;
 	now_red = get_fd(fd, reading);
 	if (get_line(now_red, line) != 1)
-	{
+	{		
 		returning = get_buffer_line(now_red, line);
+		//free(now_red->buf);
 	}
 	/*if(returning == 0 || returning == -1)
-	  {
-	  search_red = reading;
-	  while(search_red->next != now_red)
-	  search_red = search_red -> next;
-	  if(now_red->next != NULL)
-	  search_red->next = now_red->next;
-	  else
-	  search_red->next = NULL;
-	  free(now_red);
-	  }*/
+	{
+		search_red = reading;
+		while(search_red->next != now_red)
+			search_red = search_red -> next;
+		if(now_red->next != NULL)
+			search_red->next = now_red->next;
+		else
+			search_red->next = NULL;
+		free(now_red);
+	}*/
 	return (returning);
 }
