@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/07 22:04:08 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/07 22:11:14 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ int get_line (file *now_red, char **line)
 	i = 0;
 	if (buf == NULL)
 	{
-		//printf("Ha entrado aqui\n");
 		return (-1);
 	}
 	if(!(mo = (char*)malloc(BUFFER_SIZE + 1 * sizeof(char))))
@@ -125,7 +124,6 @@ int get_line (file *now_red, char **line)
 		ft_strlcpy(&(now_red->buf[0]), &(*buf),  BUFFER_SIZE);
 		return (1);
 	}
-
 }
 
 int	get_buffer_line(file *now_reading, char **line) 
@@ -134,7 +132,6 @@ int	get_buffer_line(file *now_reading, char **line)
 	int		readed;
 	int		i;
 
-	//printf("La direccion de memoria de now_reading->buf es: %p\n", now_reading->buf);
 	end_line = 0;
 
 	while (end_line == 0)
@@ -144,9 +141,7 @@ int	get_buffer_line(file *now_reading, char **line)
 		i = 0;
 		while(i <= BUFFER_SIZE)
 			now_reading->buf[i++] = '\0';
-		//printf("now_reading->buf antes es %s\n", now_reading->buf);
 		readed = read(now_reading->fd, now_reading->buf, BUFFER_SIZE);
-		//printf("now_reading->buf después es %s\n", now_reading->buf);
 		if(readed < 0)
 		{
 			//	write(2, "An error occurred in the read.\n", 31);
@@ -154,17 +149,12 @@ int	get_buffer_line(file *now_reading, char **line)
 		}
 		else if (readed == 0)
 		{
-			//now_reading->buf = NULL;
-			//free(now_reading->buf);
-			//free(now_reading);
 			//write(1, "End of file reached\n", 20);
 			return (0) ;
 		}
 		else
 		{
-			//printf("Entra en el get_line\n");
 			end_line = get_line(now_reading, line);
-			//printf("La direccion de memoria de now_reading->buf despues es: %p\n", now_reading->buf);
 		}
 	}
 	return (1);
@@ -199,7 +189,6 @@ int get_next_line(int fd, char **line)
 	static file	*reading;
 	int			returning;
 	file		*now_red; 
-	//	file		*search_red;
 
 	if (line == NULL)
 		return(-1);
