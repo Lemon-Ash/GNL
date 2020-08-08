@@ -6,16 +6,13 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 15:16:57 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/08 18:57:24 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	int	cont;
 
@@ -36,12 +33,11 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (cont);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char				*ft_strjoin(char const *s1, char const *s2)
 {
 	int		s1_len;
 	int		s2_len;
 	char	*new;
-	char	*init_new;
 
 	if (s1 == 0 || s2 == 0)
 		return (0);
@@ -55,46 +51,34 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s2 -= (s2_len + 1);
 	if (!(new = malloc((s1_len + s2_len + 1) * sizeof(char))))
 		return (0);
-	init_new = new;
 	while (*s1 != '\0')
 		*new++ = *s1++;
 	while (*s2 != '\0')
 		*new++ = *s2++;
 	*new = '\0';
-//	if(*s1 != '\0')
-//		free((void*)s1);
-	return (init_new);
+	s1 -= s1_len;
+	free((void*)s1);
+	new -= (s1_len + s2_len);
+	return (new);
 }
 
-int		get_line(file *now_red, char **line)
+int					get_line(file *now_red, char **line)
 {
 	int		i;
 	char	*mo;
 	char	*buf;
-	char	*line2;
 
-	line2 = *line;
-	buf = now_red->buf;
 	i = 0;
+	buf = now_red->buf;
 	if (buf == NULL)
-	{
 		return (-1);
-	}
 	if (!(mo = (char*)malloc(BUFFER_SIZE + 1 * sizeof(char))))
 		return (-1);
 	while (*buf != '\n' && *buf != '\0')
-	{
 		mo[i++] = *buf++;
-	}
 	mo[i] = '\0';
 	*line = ft_strjoin(*line, mo);
-	//printf("La direccion de memoria de *line despues de join: %p\n", *line);
-	//if (*line2 != '\0')
-		free(line2);
-	//else
-	//	line2 = *line;
 	free(mo);
-	i = 0;
 	if (*buf == '\0')
 	{
 		free((void*)now_red->buf);
@@ -102,13 +86,12 @@ int		get_line(file *now_red, char **line)
 	}
 	else
 	{
-		buf++;
-		ft_strlcpy(&(now_red->buf[0]), &(*buf), BUFFER_SIZE);
+		ft_strlcpy(&(now_red->buf[0]), &(*(++buf)), BUFFER_SIZE);
 		return (1);
 	}
 }
 
-int		get_buffer_line(file *now_read, char **line)
+int					get_buffer_line(file *now_read, char **line)
 {
 	int		end_line;
 	int		readed;
@@ -133,7 +116,7 @@ int		get_buffer_line(file *now_read, char **line)
 	return (1);
 }
 
-struct	buff_file	*get_fd(int fd, file *now_reading)
+struct buff_file	*get_fd(int fd, file *now_reading)
 {
 	file	*new_file;
 
@@ -157,33 +140,27 @@ struct	buff_file	*get_fd(int fd, file *now_reading)
 	return (now_reading);
 }
 
-int		get_next_line(int fd, char **line)
+int					get_next_line(int fd, char **line)
 {
 	static file	*reading;
 	int			returning;
 	file		*now_red;
 
-	if (line == NULL)
+	if (line == NULL ||BUFFER_SIZE < 1)
+		return (-1);
+	if (BUFFER_SIZE == 0)
 		return (-1);
 	if (reading == NULL)
 	{
-		//printf("Ha entrado en !");
-		if(!(*line = (char*)malloc(1 * sizeof(char))))
-			return (-1);
-		**line = '\0';
 		if (!(reading = (file*)malloc(1 * sizeof(file))))
 			return (-1);
 		reading->fd = fd;
 		reading->buf = NULL;
 		reading->next = NULL;
 	}
-	else
-	{
-		//free(*line);
-		if(!(*line = (char*)malloc(1 * sizeof(char))))
-			return (-1);
-		**line = '\0';
-	}
+	if (!(*line = (char*)malloc(1 * sizeof(char))))
+		return (-1);
+	**line = '\0';
 	returning = 1;
 	now_red = get_fd(fd, reading);
 	if (get_line(now_red, line) != 1)
