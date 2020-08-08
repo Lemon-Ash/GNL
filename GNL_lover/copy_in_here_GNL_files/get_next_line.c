@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 14:37:09 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/08 13:31:03 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,6 @@ int		get_line(file *now_red, char **line)
 	//printf("La direccion de memoria de *line despues de join: %p\n", *line);
 	if (*line2 != '\0')
 		free(line2);
-	else
-		line2 = *line;
 	free(mo);
 	i = 0;
 	if (*buf == '\0')
