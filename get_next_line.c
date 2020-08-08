@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 14:37:09 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/08 15:16:57 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (*s2 != '\0')
 		*new++ = *s2++;
 	*new = '\0';
-	//if(*s1 != '\0')
-	//	free((void*)s1);
+//	if(*s1 != '\0')
+//		free((void*)s1);
 	return (init_new);
 }
 
@@ -89,10 +89,10 @@ int		get_line(file *now_red, char **line)
 	mo[i] = '\0';
 	*line = ft_strjoin(*line, mo);
 	//printf("La direccion de memoria de *line despues de join: %p\n", *line);
-	if (*line2 != '\0')
+	//if (*line2 != '\0')
 		free(line2);
-	else
-		line2 = *line;
+	//else
+	//	line2 = *line;
 	free(mo);
 	i = 0;
 	if (*buf == '\0')
@@ -167,13 +167,23 @@ int		get_next_line(int fd, char **line)
 		return (-1);
 	if (reading == NULL)
 	{
+		//printf("Ha entrado en !");
+		if(!(*line = (char*)malloc(1 * sizeof(char))))
+			return (-1);
+		**line = '\0';
 		if (!(reading = (file*)malloc(1 * sizeof(file))))
 			return (-1);
 		reading->fd = fd;
 		reading->buf = NULL;
 		reading->next = NULL;
 	}
-	*line = "";
+	else
+	{
+		//free(*line);
+		if(!(*line = (char*)malloc(1 * sizeof(char))))
+			return (-1);
+		**line = '\0';
+	}
 	returning = 1;
 	now_red = get_fd(fd, reading);
 	if (get_line(now_red, line) != 1)

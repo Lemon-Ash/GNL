@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 12:19:56 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/08 15:16:57 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
-/*void	*ft_memmove(void *dst, const void *src, size_t len)
-  {
-  size_t				i;
-  unsigned char		*ptr;
-  const unsigned char	*ptr2;
-
-  ptr = (unsigned char*)dst;
-  ptr2 = (unsigned char*)src;
-  i = 0;
-  if (dst == src)
-  return (dst);
-  if (ptr2 < ptr)
-  while (++i <= len)
-  ptr[len - i] = ptr2[len - i];
-  else
-  while (len-- > 0)
- *(ptr++) = *(ptr2++);
- return (dst);
- }*/
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
@@ -81,17 +61,17 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (*s2 != '\0')
 		*new++ = *s2++;
 	*new = '\0';
-	//if(*s1 != '\0')
-	//	free((void*)s1);
+//	if(*s1 != '\0')
+//		free((void*)s1);
 	return (init_new);
 }
 
-int get_line (file *now_red, char **line)
+int		get_line(file *now_red, char **line)
 {
-	int i;
-	char *mo;
-	char *buf;
-	char *line2;
+	int		i;
+	char	*mo;
+	char	*buf;
+	char	*line2;
 
 	line2 = *line;
 	buf = now_red->buf;
@@ -100,7 +80,7 @@ int get_line (file *now_red, char **line)
 	{
 		return (-1);
 	}
-	if(!(mo = (char*)malloc(BUFFER_SIZE + 1 * sizeof(char))))
+	if (!(mo = (char*)malloc(BUFFER_SIZE + 1 * sizeof(char))))
 		return (-1);
 	while (*buf != '\n' && *buf != '\0')
 	{
@@ -108,9 +88,11 @@ int get_line (file *now_red, char **line)
 	}
 	mo[i] = '\0';
 	*line = ft_strjoin(*line, mo);
-	//printf("La direccion de memoria de *line despues de join es: %p\n", *line);
-	if (*line2 != '\0')
+	//printf("La direccion de memoria de *line despues de join: %p\n", *line);
+	//if (*line2 != '\0')
 		free(line2);
+	//else
+	//	line2 = *line;
 	free(mo);
 	i = 0;
 	if (*buf == '\0')
@@ -121,46 +103,37 @@ int get_line (file *now_red, char **line)
 	else
 	{
 		buf++;
-		ft_strlcpy(&(now_red->buf[0]), &(*buf),  BUFFER_SIZE);
+		ft_strlcpy(&(now_red->buf[0]), &(*buf), BUFFER_SIZE);
 		return (1);
 	}
 }
 
-int	get_buffer_line(file *now_reading, char **line) 
+int		get_buffer_line(file *now_read, char **line)
 {
 	int		end_line;
 	int		readed;
 	int		i;
 
 	end_line = 0;
-
 	while (end_line == 0)
-	{		
-		if (!(now_reading->buf = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char))))
-			return(-1);
+	{
+		if (!(now_read->buf = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char))))
+			return (-1);
 		i = 0;
-		while(i <= BUFFER_SIZE)
-			now_reading->buf[i++] = '\0';
-		readed = read(now_reading->fd, now_reading->buf, BUFFER_SIZE);
-		if(readed < 0)
-		{
-			//	write(2, "An error occurred in the read.\n", 31);
-			return (-1) ;
-		}
+		while (i <= BUFFER_SIZE)
+			now_read->buf[i++] = '\0';
+		readed = read(now_read->fd, now_read->buf, BUFFER_SIZE);
+		if (readed < 0)
+			return (-1);
 		else if (readed == 0)
-		{
-			//write(1, "End of file reached\n", 20);
-			return (0) ;
-		}
+			return (0);
 		else
-		{
-			end_line = get_line(now_reading, line);
-		}
+			end_line = get_line(now_read, line);
 	}
 	return (1);
 }
 
-struct buff_file	*get_fd(int fd, file *now_reading)
+struct	buff_file	*get_fd(int fd, file *now_reading)
 {
 	file	*new_file;
 
@@ -181,26 +154,36 @@ struct buff_file	*get_fd(int fd, file *now_reading)
 	}
 	else
 		now_reading->fd = fd;
-	return now_reading;
+	return (now_reading);
 }
 
-int get_next_line(int fd, char **line) 
+int		get_next_line(int fd, char **line)
 {
 	static file	*reading;
 	int			returning;
-	file		*now_red; 
+	file		*now_red;
 
 	if (line == NULL)
-		return(-1);
+		return (-1);
 	if (reading == NULL)
 	{
+		//printf("Ha entrado en !");
+		if(!(*line = (char*)malloc(1 * sizeof(char))))
+			return (-1);
+		**line = '\0';
 		if (!(reading = (file*)malloc(1 * sizeof(file))))
 			return (-1);
 		reading->fd = fd;
 		reading->buf = NULL;
 		reading->next = NULL;
 	}
-	*line = "";
+	else
+	{
+		//free(*line);
+		if(!(*line = (char*)malloc(1 * sizeof(char))))
+			return (-1);
+		**line = '\0';
+	}
 	returning = 1;
 	now_red = get_fd(fd, reading);
 	if (get_line(now_red, line) != 1)
