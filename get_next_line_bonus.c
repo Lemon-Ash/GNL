@@ -6,11 +6,11 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 20:05:22 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/08 20:29:14 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char				*ft_strjoin(char const *s1, char const *s2)
 {

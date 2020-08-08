@@ -6,12 +6,12 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:50:55 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 21:01:49 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/08 21:04:22 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
