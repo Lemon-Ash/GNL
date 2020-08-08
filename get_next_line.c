@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 18:57:24 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/08 19:21:30 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,10 @@ int					get_buffer_line(file *now_read, char **line)
 			now_read->buf[i++] = '\0';
 		readed = read(now_read->fd, now_read->buf, BUFFER_SIZE);
 		if (readed < 0)
+		{
+			*line = NULL;
 			return (-1);
+		}
 		else if (readed == 0)
 			return (0);
 		else
