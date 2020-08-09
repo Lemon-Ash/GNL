@@ -6,11 +6,33 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/09 12:39:59 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/09 22:43:09 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "stdio.h"
+
+size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize)
+{
+	int cont;
+
+	cont = 0;
+	if (!dst || !src)
+		return(0);
+	while (src[cont] != '\0')
+		cont++;
+	while (dstsize > 1 && *src != '\0')
+	{
+		*dst = *src;
+		dst++;
+		src++;
+		dstsize--;
+	}
+	if (dstsize != 0)
+		*dst = '\0';
+	return (cont);
+}
 
 char				*ft_strjoin(char const *s1, char const *s2)
 {
@@ -41,50 +63,55 @@ char				*ft_strjoin(char const *s1, char const *s2)
 	return (new);
 }
 
-int					get_line(t_file *now_red, char **line)
+int					get_line(char *buffer, char **line)
 {
 	int		i;
 	char	*mo;
 	char	*buf;
 
 	i = 0;
-	buf = now_red->buf;
-	if (buf == NULL)
+	buf = buffer;
+	if (buffer == NULL)
 		return (-1);
-	if (!(mo = (char*)malloc(BUFFER_SIZE + 1 * sizeof(char))))
+	if (!(mo = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char))))
 		return (-1);
 	while (*buf != '\n' && *buf != '\0')
-		mo[i++] = *buf++;
-	mo[i] = '\0';
+		*(mo+i++) = *buf++;
+	*(mo+i) = '\0';
+	printf("El contenido de line antes de strjoin es: %s\n", *line);
 	*line = ft_strjoin(*line, mo);
+	printf("El contenido de line despues de strjoin es: %s\n", *line);
 	free(mo);
 	if (*buf == '\0')
 	{
-		free((void*)now_red->buf);
+		free((void*)buffer);
 		return (0);
 	}
 	else
 	{
-		ft_strlcpy(&(now_red->buf[0]), &(*(++buf)), BUFFER_SIZE);
+		printf("El buffer antes del strlcpy es: %s\n", buffer);
+		ft_strlcpy(buffer, ++buf, BUFFER_SIZE);
+		printf("El buffer despues del strlcpy es: %s\n", buffer);
 		return (1);
 	}
 }
 
-int					get_buffer_line(t_file *now_read, char **line)
+int					get_buffer_line(int fd, char *buffer, char **line)
 {
 	int		end_line;
 	int		readed;
 	int		i;
 
+	i = 0;
 	end_line = 0;
 	while (end_line == 0)
 	{
-		if (!(now_read->buf = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char))))
+		if (!(buffer = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char))))
 			return (-1);
-		i = 0;
-		while (i <= BUFFER_SIZE)
-			now_read->buf[i++] = '\0';
-		readed = read(now_read->fd, now_read->buf, BUFFER_SIZE);
+		while (i <=BUFFER_SIZE)
+			buffer[i++] = '\0';
+		readed = read(fd, buffer, BUFFER_SIZE);
+		printf("El contenido de buffer después de leer es: %s\n", buffer);
 		if (readed < 0)
 		{
 			*line = NULL;
@@ -93,59 +120,25 @@ int					get_buffer_line(t_file *now_read, char **line)
 		else if (readed == 0)
 			return (0);
 		else
-			end_line = get_line(now_read, line);
+			end_line = get_line(buffer, line);
 	}
 	return (1);
 }
 
-struct s_buff_file	*get_fd(int fd, t_file *now_reading)
-{
-	t_file	*new_file;
-
-	if (now_reading->fd != 0)
-	{
-		while (now_reading->fd != fd && now_reading->next != NULL)
-			now_reading = now_reading->next;
-		if (now_reading->fd != fd)
-		{
-			if (!(new_file = (t_file*)malloc(1 * sizeof(t_file))))
-				return (new_file = NULL);
-			new_file->fd = fd;
-			new_file->buf = NULL;
-			new_file->next = NULL;
-			now_reading->next = new_file;
-			now_reading = now_reading->next;
-		}
-	}
-	else
-		now_reading->fd = fd;
-	return (now_reading);
-}
-
 int					get_next_line(int fd, char **line)
 {
-	static t_file	*reading;
-	int				returning;
-	t_file			*now_read;
+	static char	*buffer;
+	int			returning;
 
 	if (line == NULL || BUFFER_SIZE < 1)
 		return (-1);
-	if (reading == NULL)
-	{
-		if (!(reading = (t_file*)malloc(1 * sizeof(t_file))))
-			return (-1);
-		reading->fd = fd;
-		reading->buf = NULL;
-		reading->next = NULL;
-	}
 	if (!(*line = (char*)malloc(1 * sizeof(char))))
 		return (-1);
 	**line = '\0';
 	returning = 1;
-	now_read = get_fd(fd, reading);
-	if (get_line(now_read, line) != 1)
-		returning = get_buffer_line(now_read, line);
-	if (returning == 0)
-		ft_freelist(reading, now_read);
+	if (get_line(buffer, line) != 1)
+		returning = get_buffer_line(fd, buffer, line);
+	if (returning < 1)
+		free(buffer);
 	return (returning);
 }
