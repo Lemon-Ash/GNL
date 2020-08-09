@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:50:55 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 12:54:04 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/09 13:10:41 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@
 # include <unistd.h>
 
 int				get_next_line(int fd, char **line);
-typedef	struct	buff_file {
+size_t			ft_strlcpy(char *dst, const char *src, size_t dstsize);
+typedef	struct	s_buff_file {
 	int					fd;
 	char				*buf;
-	struct buff_file	*next;
-}				file;
+	struct s_buff_file	*next;
+}				t_file;
+void			ft_freelist(t_file *reading, t_file *now_reading);
 
 #endif

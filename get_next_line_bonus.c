@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 20:29:14 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/09 13:06:54 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int					get_next_line(int fd, char **line)
 {
 	static t_file	*reading;
 	int				returning;
-	t_file			*now_red;
+	t_file			*now_read;
 
 	if (line == NULL || BUFFER_SIZE < 1)
 		return (-1);
@@ -142,10 +142,10 @@ int					get_next_line(int fd, char **line)
 		return (-1);
 	**line = '\0';
 	returning = 1;
-	now_red = get_fd(fd, reading);
-	if (get_line(now_red, line) != 1)
-	{
-		returning = get_buffer_line(now_red, line);
-	}
+	now_read = get_fd(fd, reading);
+	if (get_line(now_read, line) != 1)
+		returning = get_buffer_line(now_read, line);
+	if (returning == 0)
+		ft_freelist(reading, now_read);
 	return (returning);
 }

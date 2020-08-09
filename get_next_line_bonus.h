@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:50:55 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 21:04:22 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/09 13:11:32 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@ typedef	struct	s_buff_file {
 	char				*buf;
 	struct s_buff_file	*next;
 }				t_file;
+void			ft_freelist(t_file *reading, t_file *now_reading);
 
 #endif

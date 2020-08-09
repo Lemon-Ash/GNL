@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:53:47 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/08 19:49:41 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/09 13:20:45 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,19 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	if (dstsize != 0)
 		*dst = '\0';
 	return (cont);
+}
+
+void	ft_freelist(t_file *reading, t_file *now_reading)
+{
+	if (reading->fd != now_reading->fd)
+	{
+		while ((reading->next)->fd != now_reading->fd)
+			reading = reading->next;
+		if (now_reading->next != NULL)
+			reading->next = now_reading->next;
+		else
+			reading->next = NULL;
+		free(now_reading->buf);
+		free(now_reading);
+	}
 }
