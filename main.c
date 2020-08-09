@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 13:41:49 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/05 21:46:01 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/09 17:46:58 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ int		main(void)
 	{
 	mark = get_next_line(fd1, &line);
 	printf("| %s\n", line);
+	free((void*)line);
 	mark = get_next_line(fd2, &line);
 	printf("| %s\n", line);
 	/*mark = get_next_line(fd1, &line);
 	printf("| %s\n", line);
 	mark = get_next_line(fd2, &line);
 	printf("| %s\n", line);*/
+	free((void*)line);
 	}
 }
