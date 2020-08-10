@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:53:47 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/10 23:03:11 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/11 00:17:48 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,16 @@ void	*ft_freelist(t_file *reading, t_file *now_reading)
 	{
 		while ((reading->next)->fd != now_reading->fd)
 			reading = reading->next;
-		if (now_reading->next != NULL)
-			reading->next = now_reading->next;
-		else
-			reading->next = NULL;
-		free((void*)now_reading->buf);
-		free(now_reading);
+		reading->next = now_reading->next;
 	}
-	else if (reading->fd == now_reading->fd)
+	else
 	{
-		if (reading->next == NULL)
-		{
-			free(now_reading->buf);
-			free(now_reading);
-		}
+		if (reading->next != NULL)
+			reading = reading->next;
 		else
-		{
-			reading = now_reading->next;
-			free((void*)now_reading->buf);
-			free(now_reading);
-		}
+			return (0);
 	}
+	free((void*)now_reading->buf);
+	free(now_reading);
 	return (0);
 }

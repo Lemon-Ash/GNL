@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/10 22:52:05 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/11 00:17:27 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int					get_next_line(int fd, char **line)
 	int				returning;
 	t_file			*now_read;
 
-	if (line == NULL || BUFFER_SIZE < 1)
+	if (line == NULL || BUFFER_SIZE < 1 || read(fd, NULL, 0) == -1)
 		return (-1);
 	if (reading == NULL)
 	{
