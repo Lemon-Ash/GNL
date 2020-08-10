@@ -6,11 +6,11 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/09 21:15:30 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/10 15:30:36 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char				*ft_strjoin(char const *s1, char const *s2)
 {
@@ -54,8 +54,8 @@ int					get_line(t_file *now_red, char **line)
 	if (!(mo = (char*)malloc(BUFFER_SIZE + 1 * sizeof(char))))
 		return (-1);
 	while (*buf != '\n' && *buf != '\0')
-		*(mo+i++) = *buf++;
-	*(mo+i) = '\0';
+		mo[i++] = *buf++;
+	mo[i] = '\0';
 	*line = ft_strjoin(*line, mo);
 	free(mo);
 	if (*buf == '\0')
@@ -65,7 +65,7 @@ int					get_line(t_file *now_red, char **line)
 	}
 	else
 	{
-		ft_strlcpy(now_red->buf, ++buf, BUFFER_SIZE);
+		ft_strlcpy(&(now_red->buf[0]), &(*(++buf)), BUFFER_SIZE);
 		return (1);
 	}
 }
@@ -83,7 +83,7 @@ int					get_buffer_line(t_file *now_read, char **line)
 			return (-1);
 		i = 0;
 		while (i <= BUFFER_SIZE)
-			*(now_read->buf+i++) = '\0';
+			now_read->buf[i++] = '\0';
 		readed = read(now_read->fd, now_read->buf, BUFFER_SIZE);
 		if (readed < 0)
 		{
@@ -102,6 +102,8 @@ struct s_buff_file	*get_fd(int fd, t_file *now_reading)
 {
 	t_file	*new_file;
 
+	if (now_reading->fd != 0)
+	{
 		while (now_reading->fd != fd && now_reading->next != NULL)
 			now_reading = now_reading->next;
 		if (now_reading->fd != fd)
@@ -114,6 +116,9 @@ struct s_buff_file	*get_fd(int fd, t_file *now_reading)
 			now_reading->next = new_file;
 			now_reading = now_reading->next;
 		}
+	}
+	else
+		now_reading->fd = fd;
 	return (now_reading);
 }
 
@@ -140,7 +145,7 @@ int					get_next_line(int fd, char **line)
 	now_read = get_fd(fd, reading);
 	if (get_line(now_read, line) != 1)
 		returning = get_buffer_line(now_read, line);
-	if (returning < 1)
-		reading = ft_freelist(reading, now_read);
+	if (returning == 0)
+		ft_freelist(reading, now_read);
 	return (returning);
 }

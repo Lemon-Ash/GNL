@@ -6,12 +6,12 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:50:55 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/09 19:43:40 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/10 15:23:42 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
@@ -27,6 +27,6 @@ typedef	struct		s_buff_file {
 	char				*buf;
 	struct s_buff_file	*next;
 }				t_file;
-struct s_buff_file	*ft_freelist(t_file *reading, t_file *now_reading);
+void				*ft_freelist(t_file *reading, t_file *now_reading);
 
 #endif
