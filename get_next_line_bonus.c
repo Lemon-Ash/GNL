@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/10 15:30:36 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/10 22:52:05 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ int					get_line(t_file *now_red, char **line)
 	if (!(mo = (char*)malloc(BUFFER_SIZE + 1 * sizeof(char))))
 		return (-1);
 	while (*buf != '\n' && *buf != '\0')
-		mo[i++] = *buf++;
-	mo[i] = '\0';
+		*(mo + i++) = *buf++;
+	*(mo + i) = '\0';
 	*line = ft_strjoin(*line, mo);
 	free(mo);
 	if (*buf == '\0')
@@ -65,7 +65,7 @@ int					get_line(t_file *now_red, char **line)
 	}
 	else
 	{
-		ft_strlcpy(&(now_red->buf[0]), &(*(++buf)), BUFFER_SIZE);
+		ft_strlcpy(now_red->buf, ++buf, BUFFER_SIZE);
 		return (1);
 	}
 }
@@ -83,7 +83,7 @@ int					get_buffer_line(t_file *now_read, char **line)
 			return (-1);
 		i = 0;
 		while (i <= BUFFER_SIZE)
-			now_read->buf[i++] = '\0';
+			*(now_read->buf + i++) = '\0';
 		readed = read(now_read->fd, now_read->buf, BUFFER_SIZE);
 		if (readed < 0)
 		{

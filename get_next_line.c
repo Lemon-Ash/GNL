@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/10 14:36:08 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/10 22:49:30 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,39 +49,34 @@ int					get_line(char *buffer, char **line)
 
 	i = 0;
 	buf = buffer;
-	if (buf == NULL)
+	if (buf == NULL || *buf == '\0')
 		return (-1);
 	if (!(mo = (char*)malloc(BUFFER_SIZE + 1 * sizeof(char))))
 		return (-1);
 	while (*buf != '\n' && *buf != '\0')
-		*(mo+i++) = *buf++;
-	*(mo+i) = '\0';
+		*(mo + i++) = *buf++;
+	*(mo + i) = '\0';
 	*line = ft_strjoin(*line, mo);
 	free(mo);
 	if (*buf == '\0')
 	{
-		//free((void*)now_red->buf);
+		while (0 <= i)
+			*(buffer + i--) = '\0';
 		return (0);
 	}
-	else
-	{
-		ft_strlcpy(buffer, ++buf, BUFFER_SIZE);
-		return (1);
-	}
+	ft_strlcpy(buffer, ++buf, BUFFER_SIZE);
+	return (1);
 }
 
 int					get_buffer_line(int fd, char *buffer, char **line)
 {
 	int		end_line;
 	int		readed;
-	int		i;
 
 	end_line = 0;
 	while (end_line == 0)
 	{
-		i = 0;
-		while (i <= BUFFER_SIZE)
-			buffer[i++] = '\0';
+		buffer[BUFFER_SIZE] = '\0';
 		readed = read(fd, buffer, BUFFER_SIZE);
 		if (readed < 0)
 		{
@@ -99,20 +94,15 @@ int					get_buffer_line(int fd, char *buffer, char **line)
 int					get_next_line(int fd, char **line)
 {
 	static char	buffer[BUFFER_SIZE + 1	];
-	int				returning;
+	int			returning;
 
-	if (line == NULL || BUFFER_SIZE < 1)
+	if (line == NULL || BUFFER_SIZE < 1 || fd < 0 || read(fd, NULL, 0) == -1)
 		return (-1);
-
 	if (!(*line = (char*)malloc(1 * sizeof(char))))
 		return (-1);
 	**line = '\0';
 	returning = 1;
 	if (get_line(buffer, line) != 1)
 		returning = get_buffer_line(fd, buffer, line);
-	if (returning < 1)
-	{
-		//buffer = NULL;
-	}
 	return (returning);
 }

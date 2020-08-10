@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:53:47 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/10 12:55:19 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/10 21:40:53 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize)
 		dstsize--;
 	}
 	if (dstsize != 0)
-		*dst = '\0';
+		*dst++ = '\0';
+	while (dst <= src)
+		*dst++ = '\0';
 	return (cont);
 }
