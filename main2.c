@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 13:41:49 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/10 18:39:13 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/11 12:00:51 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ int	main(int argc, char **argv)
 	if (argc == 1)
 			fd = 0;
 	i = 1;
-//	while (i < argc)
-//	{
-		fd = open("big_file", O_RDONLY);
-		//printf("Comienza lectura %s:\n", argv[i]);
+	while (i < argc)
+	{
+		fd = open(argv[i], O_RDONLY);
+		printf("Comienza lectura %s:\n", argv[i]);
 
 		while ((status = get_next_line(fd, &line)) > 0)
 		{
@@ -48,6 +48,6 @@ int	main(int argc, char **argv)
 		if (status == 0)
 			printf("-\n");
 		i++;
-//	}
+	}
 	return (0);
 }
