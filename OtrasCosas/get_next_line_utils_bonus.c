@@ -6,13 +6,14 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:53:47 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/11 15:30:03 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/11 17:14:54 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
+#include "stdio.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	int cont;
 
@@ -39,22 +40,21 @@ struct s_buff_file	*ft_freelist(t_file *reading, t_file *now_reading)
 	{
 		while ((reading->next)->fd != now_reading->fd)
 			reading = reading->next;
-		reading->next = now_reading->next;
+		if (now_reading->next != NULL)
+			reading->next = now_reading->next;
+		else
+			reading->next = NULL;
+		free((void*)now_reading->buf);
+		free(now_reading);
 	}
 	else
 	{
 		if (reading->next != NULL)
-			reading = reading->next;
-		else
 		{
-			reading = now_reading;
-			free(reading->buf);
-			free(reading);
-			reading = NULL;
-			return (NULL);
+			reading = now_reading->next;
+			free((void*)now_reading->buf);
+			free(now_reading);
 		}
 	}
-	free((void*)now_reading->buf);
-	free(now_reading);
 	return (reading);
 }
