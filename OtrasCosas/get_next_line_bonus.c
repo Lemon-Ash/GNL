@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/12 13:43:34 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/12 20:22:01 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,5 @@ int					get_next_line(int fd, char **line)
 	returning = 1;
 	if (get_line(lr[fd], line) != 1)
 		returning = get_buffer_line(fd, lr[fd], line);
-	//if (returning <= 0)
-	//	free(lr[fd]);
 	return (returning);
 }
