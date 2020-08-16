@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/16 14:46:07 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/16 17:31:12 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,10 @@ int					get_line(t_file *now_read, char **line)
 	*(mo + i) = '\0';
 	*line = ft_strjoin(*line, mo);
 	free(mo);
-	i = 0;
 	if (*buf == '\0')
 	{
-		//free((void*)now_red->buf);
-		while (i <= BUFFER_SIZE)
-			*(now_read->buf + i++) = '\0';
+		while (0 <= i)
+			*(now_read->buf + i--) = '\0';
 		return (0);
 	}
 	else
@@ -76,16 +74,11 @@ int					get_buffer_line(t_file *now_read, char **line)
 {
 	int		end_line;
 	int		readed;
-	int		i;
-
+	
 	end_line = 0;
 	while (end_line == 0)
 	{
-		//if (!(now_read->buf = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char))))
-		//	return (-1);
-		i = 0;
-		while (i <= BUFFER_SIZE)
-			*(now_read->buf + i++) = '\0';
+		*(now_read->buf + BUFFER_SIZE) = '\0';
 		readed = read(now_read->fd, now_read->buf, BUFFER_SIZE);
 		if (readed < 0)
 		{
@@ -115,7 +108,7 @@ struct s_buff_file	*get_fd(int fd, t_file *now_reading)
 			return (NULL);
 		new_file->fd = fd;
 		*(new_file->buf) = '\0';
-		new_file->next = NULL;
+		new_file->next = 0;
 		if (now_reading)
 			now_reading->next = new_file;
 		now_reading = new_file;
@@ -143,7 +136,7 @@ int					get_next_line(int fd, char **line)
 	if (get_line(now_read, line) != 1)
 		returning = get_buffer_line(now_read, line);
 	if (returning <= 0)
-		aux = ft_freelist(reading, now_read);
+		aux = ft_freelist(&reading, now_read);
 	if (aux == 1)
 		reading = NULL;
 	return (returning);

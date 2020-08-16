@@ -6,11 +6,11 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/16 17:32:46 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/16 17:17:56 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include "stdio.h"
 
 char				*ft_strjoin(char const *s1, char const *s2)
@@ -57,10 +57,12 @@ int					get_line(t_file *now_read, char **line)
 	*(mo + i) = '\0';
 	*line = ft_strjoin(*line, mo);
 	free(mo);
+	i = 0;
 	if (*buf == '\0')
 	{
-		while (0 <= i)
-			*(now_read->buf + i--) = '\0';
+		//free((void*)now_red->buf);
+		while (i <= BUFFER_SIZE)
+			*(now_read->buf + i++) = '\0';
 		return (0);
 	}
 	else
@@ -74,11 +76,16 @@ int					get_buffer_line(t_file *now_read, char **line)
 {
 	int		end_line;
 	int		readed;
-	
+	int		i;
+
 	end_line = 0;
 	while (end_line == 0)
 	{
-		*(now_read->buf + BUFFER_SIZE) = '\0';
+		//if (!(now_read->buf = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char))))
+		//	return (-1);
+		i = 0;
+		while (i <= BUFFER_SIZE)
+			*(now_read->buf + i++) = '\0';
 		readed = read(now_read->fd, now_read->buf, BUFFER_SIZE);
 		if (readed < 0)
 		{
@@ -93,7 +100,7 @@ int					get_buffer_line(t_file *now_read, char **line)
 	return (1);
 }
 
-struct s_buff_file	*get_fd(int fd, t_file *now_reading)
+struct s_buff_file	*get_fd2(int fd, t_file *now_reading)
 {
 	t_file	*new_file;
 
@@ -130,7 +137,7 @@ int					get_next_line(int fd, char **line)
 		return (-1);
 	**line = '\0';
 	returning = 1;
-	now_read = get_fd(fd, reading);
+	now_read = get_fd2(fd, reading);
 	if(!reading)
 		reading = now_read;
 	if (get_line(now_read, line) != 1)

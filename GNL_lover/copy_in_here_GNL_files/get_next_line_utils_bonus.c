@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:53:47 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/16 17:27:29 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/16 17:11:27 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	}
 	if (dstsize != 0)
 		*dst = '\0';
-	while (dst <= src)
-		*dst++ = '\0';
 	return (cont);
 }
 

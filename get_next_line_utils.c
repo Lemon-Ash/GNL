@@ -6,14 +6,14 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:53:47 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/10 21:40:53 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/16 17:33:08 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "stdio.h"
 
-size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	int cont;
 
@@ -30,8 +30,33 @@ size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize)
 		dstsize--;
 	}
 	if (dstsize != 0)
-		*dst++ = '\0';
+		*dst = '\0';
 	while (dst <= src)
 		*dst++ = '\0';
 	return (cont);
+}
+
+int		ft_freelist(t_file **read, t_file *now_reading)
+{
+	int last;
+	t_file	*reading;
+
+	reading = *read;
+	last = 0;
+	if (reading->fd != now_reading->fd)
+	{
+		while ((reading->next)->fd != now_reading->fd)
+			reading = reading->next;
+		reading->next = now_reading->next;
+	}
+	else
+	{
+		if (reading->next != NULL)
+			*read = ((*read)->next);
+		else
+			*read = NULL;
+	}
+	free((void*)now_reading->buf);
+	free(now_reading);
+	return (last);
 }
