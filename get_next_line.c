@@ -6,12 +6,11 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/16 17:32:46 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/16 18:04:07 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "stdio.h"
 
 char				*ft_strjoin(char const *s1, char const *s2)
 {
@@ -63,18 +62,15 @@ int					get_line(t_file *now_read, char **line)
 			*(now_read->buf + i--) = '\0';
 		return (0);
 	}
-	else
-	{
-		ft_strlcpy(now_read->buf, ++buf, BUFFER_SIZE);
-		return (1);
-	}
+	ft_strlcpy(now_read->buf, ++buf, BUFFER_SIZE);
+	return (1);
 }
 
 int					get_buffer_line(t_file *now_read, char **line)
 {
 	int		end_line;
 	int		readed;
-	
+
 	end_line = 0;
 	while (end_line == 0)
 	{
@@ -121,9 +117,7 @@ int					get_next_line(int fd, char **line)
 	static t_file	*reading;
 	int				returning;
 	t_file			*now_read;
-	int				aux;
 
-	aux = 0;
 	if (line == NULL || BUFFER_SIZE < 1 || read(fd, NULL, 0) == -1)
 		return (-1);
 	if (!(*line = (char*)malloc(1 * sizeof(char))))
@@ -131,13 +125,11 @@ int					get_next_line(int fd, char **line)
 	**line = '\0';
 	returning = 1;
 	now_read = get_fd(fd, reading);
-	if(!reading)
+	if (!reading)
 		reading = now_read;
 	if (get_line(now_read, line) != 1)
 		returning = get_buffer_line(now_read, line);
 	if (returning <= 0)
-		aux = ft_freelist(&reading, now_read);
-	if (aux == 1)
-		reading = NULL;
+		ft_freelist(&reading, now_read);
 	return (returning);
 }

@@ -6,12 +6,11 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:53:47 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/16 17:33:08 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/16 18:04:22 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "stdio.h"
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
@@ -36,13 +35,11 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (cont);
 }
 
-int		ft_freelist(t_file **read, t_file *now_reading)
+void	ft_freelist(t_file **read, t_file *now_reading)
 {
-	int last;
 	t_file	*reading;
 
 	reading = *read;
-	last = 0;
 	if (reading->fd != now_reading->fd)
 	{
 		while ((reading->next)->fd != now_reading->fd)
@@ -56,7 +53,6 @@ int		ft_freelist(t_file **read, t_file *now_reading)
 		else
 			*read = NULL;
 	}
-	free((void*)now_reading->buf);
+	free(now_reading->buf);
 	free(now_reading);
-	return (last);
 }
