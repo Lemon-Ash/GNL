@@ -6,11 +6,12 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:53:47 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/15 12:51:37 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/16 14:44:53 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
+#include "stdio.h"
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
@@ -33,8 +34,11 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (cont);
 }
 
-void	*ft_freelist(t_file *reading, t_file *now_reading)
+int		ft_freelist(t_file *reading, t_file *now_reading)
 {
+	int last;
+
+	last = 0;
 	if (reading->fd != now_reading->fd)
 	{
 		while ((reading->next)->fd != now_reading->fd)
@@ -46,9 +50,9 @@ void	*ft_freelist(t_file *reading, t_file *now_reading)
 		if (reading->next != NULL)
 			reading = reading->next;
 		else
-			return (0);
-	}
+			last = 1;
+	}	
 	free((void*)now_reading->buf);
 	free(now_reading);
-	return (0);
+	return (last);
 }

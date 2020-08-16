@@ -6,7 +6,7 @@
 /*   By: lboza-ba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 11:40:24 by lboza-ba          #+#    #+#             */
-/*   Updated: 2020/08/15 13:58:01 by lboza-ba         ###   ########.fr       */
+/*   Updated: 2020/08/16 14:46:07 by lboza-ba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ struct s_buff_file	*get_fd(int fd, t_file *now_reading)
 		if (!(new_file->buf = (char*)malloc((BUFFER_SIZE + 1) * sizeof(char))))
 			return (NULL);
 		new_file->fd = fd;
+		*(new_file->buf) = '\0';
 		new_file->next = NULL;
 		if (now_reading)
 			now_reading->next = new_file;
@@ -127,20 +128,23 @@ int					get_next_line(int fd, char **line)
 	static t_file	*reading;
 	int				returning;
 	t_file			*now_read;
+	int				aux;
 
+	aux = 0;
 	if (line == NULL || BUFFER_SIZE < 1 || read(fd, NULL, 0) == -1)
 		return (-1);
 	if (!(*line = (char*)malloc(1 * sizeof(char))))
 		return (-1);
 	**line = '\0';
 	returning = 1;
-	//	printf("Ha entrado\n");
 	now_read = get_fd(fd, reading);
 	if(!reading)
 		reading = now_read;
 	if (get_line(now_read, line) != 1)
 		returning = get_buffer_line(now_read, line);
 	if (returning <= 0)
-		ft_freelist(reading, now_read);
+		aux = ft_freelist(reading, now_read);
+	if (aux == 1)
+		reading = NULL;
 	return (returning);
 }
